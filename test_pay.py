@@ -134,7 +134,7 @@ keys = [tester.k1,
 addrs = map(utils.privtoaddr, keys)
 
 # Create the contract
-contract_code = open('contractDuplex.sol').read()
+contract_code = open('contractPay.sol').read()
 contract = s.abi_contract(contract_code, language='solidity',
                           constructor_parameters= ((addrs[0], addrs[1]),) )
 
@@ -145,15 +145,6 @@ def completeRound(players, r, payL, payR, wdrawL, wdrawR):
     sigs = (sigL, sigR)
     players[0].receiveSignatures(r, sigs)
     players[1].receiveSignatures(r, sigs)
-
-def partialRound(players, round, shares):
-    hashes = map(utils.sha3, shares)    
-    print 'Opening the round for each player'
-    sigs = []
-    for shr,p in zip(shares,players):
-        assert round == p.lastOpenRound + 1
-        sigs.append(p.subprotocolOutput(round, hashes, shr))
-    return sigs
 
 # Take a snapshot before trying out test cases
 #try: s.revert(s.snapshot())
@@ -191,3 +182,9 @@ def test1():
     print 'Finalize'
     contract.finalize()
     getstatus()
+
+
+if __name__ == '__main__':
+    try: __IPYTHON__
+    except NameError:
+        test1()
