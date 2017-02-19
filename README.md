@@ -7,7 +7,7 @@ The Lightning Network (and the Raiden Network) also support a "conditional payme
 
 Sprites are a new kind of payment channel that avoid this problem. They make use of a global contract, the "PreimageManager", which acts like a global condition for all the payment channels on the contract.
 
-<img src="highlight.png" width=200/>
+<img src="highlight.png" width=450/>
 
 This github repo provides a simple implementation of basic bidirectional payment channels (`contractPay.sol`), and an extension that supports conditional payments as described above (`contractSprite.sol`).
 
