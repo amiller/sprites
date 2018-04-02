@@ -13,6 +13,7 @@ This github repo provides a simple implementation of basic bidirectional payment
 
 Requirements
 ----
+- bitcoin
 - pyethereum
 - solc
 
@@ -36,4 +37,3 @@ Contents
 
 - contractSprite.sol, test_sprite.sol:
    A duplex channel with conditional (hashed timelock) payments, but that supports constant expiry times
- 
