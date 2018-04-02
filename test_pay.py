@@ -1,6 +1,6 @@
-from ethereum import tester
+from ethereum.tools import tester
 from ethereum import utils
-from ethereum._solidity import get_solidity
+from ethereum.tools._solidity import get_solidity
 SOLIDITY_AVAILABLE = get_solidity() is not None
 from Crypto.Hash import SHA256
 
@@ -47,7 +47,7 @@ def getstatus():
     print 'Status:', ['OK','PENDING'][contract.status()]
     print '[L] deposits:', depositsL, 'credits:', creditsL, 'withdrawals:', wdrawL
     print '[R] deposits:', depositsR, 'credits:', creditsR, 'withdrawals:', wdrawR
-    
+
 
 class Player():
     def __init__(self, sk, i, contract):
@@ -56,7 +56,7 @@ class Player():
         self.contract = contract
         self.status = "OK"
         self.lastRound = -1
-        self.lastCommit = None, (0, 0, 0, 0) 
+        self.lastCommit = None, (0, 0, 0, 0)
         self.lastProposed = None
 
     def deposit(self, amt):
@@ -101,7 +101,7 @@ class Player():
 
         for i,sig in enumerate(sigs):
             verify_signature(addrs[i], self.h, sig)
-        
+
         self.lastCommit = sigs, self.lastProposed
         self.lastRound += 1
 
@@ -121,10 +121,10 @@ class Player():
         sigs, (creditsL, creditsR, withdrawalsL, withdrawalsR) = self.lastCommit
         sig = sigs[1] if self.i == 0 else sigs[0]
         self.contract.update(sig, self.lastRound, (creditsL, creditsR), (withdrawalsL, withdrawalsR), sender=self.sk)
-        
+
 
 # Create the simulated blockchain
-s = tester.state()
+s = tester.Chain()
 s.mine()
 tester.gas_limit = 3141592
 
@@ -135,8 +135,10 @@ addrs = map(utils.privtoaddr, keys)
 
 # Create the contract
 contract_code = open('contractPay.sol').read()
-contract = s.abi_contract(contract_code, language='solidity',
-                          constructor_parameters= ((addrs[0], addrs[1]),) )
+contract = s.contract(
+    sourcecode=contract_code,
+    language='solidity',
+    args= ((addrs[0], addrs[1]),) )
 
 
 def completeRound(players, r, payL, payR, wdrawL, wdrawR):
